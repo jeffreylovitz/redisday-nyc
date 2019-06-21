@@ -1,0 +1,530 @@
+<!DOCTYPE html><html lang="en" class="js no-flexbox flexbox-legacy canvas canvastext webgl no-touch geolocation postmessage websqldatabase indexeddb hashchange history draganddrop websockets rgba hsla multiplebgs backgroundsize borderimage borderradius boxshadow textshadow opacity cssanimations csscolumns cssgradients cssreflections csstransforms csstransforms3d csstransitions fontface generatedcontent video audio localstorage sessionstorage webworkers applicationcache svg inlinesvg smil svgclippaths"><head><meta charset="UTF-8"><!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]--><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="Asciidoctor 1.5.5"><meta name="copyright" content="2019 Neo4j, Inc."><title>Cypher Refcard - adapted from Neo4j Cypher Refcard 3.5</title><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css"><!-- style -->
+<link href="css/style.css" rel="stylesheet">
+<script src="javascript/modernizr.custom.2.6.2.js"></script>
+<link href="css/cypher_main.css" rel="stylesheet" media="print, screen" type="text/css">
+<!-- Syntax Highlighter -->
+<link rel="stylesheet" href="css//codemirror.css" />
+<link rel="stylesheet" href="css/neo.css" />
+<script src="javascript/codemirror.min.js"></script>
+<script src="javascript/runmode.js"></script>
+<script src="javascript/javascript.js"></script>
+<script src="javascript/cypher.js"></script>
+<script src="javascript/colorize.js"></script>
+<style>
+.col {
+  clear: left;
+}
+
+.columns {
+  float: left;
+  width: 440px;
+}
+
+.page {
+  float: left;
+}
+
+footer div.mid {
+  padding: 1em;
+}
+
+.moved {
+  display: none;
+}
+</style>
+<script src="javascript/jquery.min.js"></script>
+<script type="text/javascript">
+  $( function()
+  {
+    function init()
+    {
+      var pageWidth = $( window ).width();
+      var numberOfColumns = 1;
+      var columns = [];
+      switch ( true )
+      {
+        case pageWidth >= 978 && pageWidth < 1350:
+          numberOfColumns = 2;
+          break;
+        case pageWidth >= 1350 && pageWidth < 1800:
+          numberOfColumns = 3;
+          break;
+        case pageWidth >= 1800 && pageWidth < 2210:
+          numberOfColumns = 4;
+          break;
+        case pageWidth >= 2210 && pageWidth < 2640:
+          numberOfColumns = 5;
+          break;
+        case pageWidth >= 2640 && pageWidth < 3960:
+          numberOfColumns = 6;
+          break;
+        case pageWidth >= 3960:
+          numberOfColumns = 9;
+          break;
+      }
+      if ( numberOfColumns < 2 )
+      {
+        return;
+      }
+      var page = $( "#clearing-div" );
+      for ( var i = 2; i <= numberOfColumns; i++ )
+      {
+        column = $( '<div class="columns" id="column-' + i + '"/>' );
+        column.insertBefore( page );
+        columns.push( column );
+      }
+      //           <div style="clear:both;"> </div>
+      $( "#page > div.col" ).each( function()
+      {
+        var element = $( this );
+        for ( var i = 2; i <= numberOfColumns; i++ )
+        {
+          var moveTo = "c" + numberOfColumns + "-" + i;
+          if ( element.hasClass( moveTo ) )
+          {
+            var clone = element.clone( true );
+            clone.appendTo( columns[i - 2] );
+            element.addClass( "moved" );
+          }
+        }
+      } );
+    }
+    init();
+    $( window ).resize(function()
+    {
+      $( "div.columns" ).remove();
+      $( "#page > div.col" ).removeClass( "moved" );
+      init();
+    });
+  } );
+</script>
+<script type="text/javascript">
+  $(document).ready(function(){
+    CodeMirror.colorize();
+  });
+</script>
+</head><body class="book"><div class="main"><div class="mid"><div class="page" id="page">
+<div class='col cardread c2-1 c3-1 c4-1 c5-1 c6-1 c9-1'><div class='blk'>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">MATCH <a class="fa fa-external-link" title="Learn more" href="https://neo4j.com/docs/cypher-manual/3.5/clauses/match"></a></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock"><pre class="programlisting brush: cypher">MATCH (n:Person)-[:KNOWS]-&gt;(m:Person)
+WHERE n.name = 'Alice'</pre></div>
+<div class="paragraph">
+<p>Node patterns can contain labels and properties.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock"><pre class="programlisting brush: cypher">MATCH (n)-[]-&gt;(m)</pre></div>
+<div class="paragraph">
+<p>Any pattern can be used in <code>MATCH</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock"><pre class="programlisting brush: cypher">MATCH (n {name: 'Alice'})-[]-&gt;(m)</pre></div>
+<div class="paragraph">
+<p>Patterns with node properties.</p>
+</div></div></td>
+</tr>
+<tr>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div></div>
+<div class='col cardread c2-1 c3-1 c4-1 c5-1 c6-1 c9-1'><div class='blk'>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">WHERE <a class="fa fa-external-link" title="Learn more" href="https://neo4j.com/docs/cypher-manual/3.5/clauses/where"></a></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock"><pre class="programlisting brush: cypher">WHERE n.property != $value</pre></div>
+<div class="paragraph">
+<p>Use a predicate to filter.
+Note that <code>WHERE</code> is always part of a  <code>MATCH</code>, or <code>WITH</code> clause.
+Putting it after a different clause in a query will alter what it does.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div></div>
+<div class='col cardread c2-1 c3-1 c4-1 c5-1 c6-1 c9-1'><div class='blk'>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">RETURN <a class="fa fa-external-link" title="Learn more" href="https://neo4j.com/docs/cypher-manual/3.5/clauses/return"></a></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock"><pre class="programlisting brush: cypher">RETURN *</pre></div>
+<div class="paragraph">
+<p>Return the value of all variables.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock"><pre class="programlisting brush: cypher">RETURN n AS columnName</pre></div>
+<div class="paragraph">
+<p>Use alias for result column name.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock"><pre class="programlisting brush: cypher">RETURN DISTINCT n</pre></div>
+<div class="paragraph">
+<p>Return unique rows.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock"><pre class="programlisting brush: cypher">ORDER BY n.property</pre></div>
+<div class="paragraph">
+<p>Sort the result.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock"><pre class="programlisting brush: cypher">ORDER BY n.property DESC</pre></div>
+<div class="paragraph">
+<p>Sort the result in descending order.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock"><pre class="programlisting brush: cypher">SKIP $skipNumber</pre></div>
+<div class="paragraph">
+<p>Skip a number of results.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock"><pre class="programlisting brush: cypher">LIMIT $limitNumber</pre></div>
+<div class="paragraph">
+<p>Limit the number of results.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock"><pre class="programlisting brush: cypher">SKIP $skipNumber LIMIT $limitNumber</pre></div>
+<div class="paragraph">
+<p>Skip results at the top and limit the number of results.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock"><pre class="programlisting brush: cypher">RETURN count(*)</pre></div>
+<div class="paragraph">
+<p>The number of matching rows.
+See Aggregating Functions for more.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div></div>
+<div class='col cardread c2-1 c3-1 c4-1 c5-1 c6-1 c9-1'><div class='blk'>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">WITH <a class="fa fa-external-link" title="Learn more" href="https://neo4j.com/docs/cypher-manual/3.5/clauses/with"></a></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock"><pre class="programlisting brush: cypher">MATCH (user)-[:FRIEND]-(friend)
+WHERE user.name = $name
+WITH user, count(friend) AS friends
+WHERE friends &gt; 10
+RETURN user</pre></div>
+<div class="paragraph">
+<p>The <code>WITH</code> syntax is similar to <code>RETURN</code>.
+It separates query parts explicitly, allowing you to declare which variables to carry over to the next part.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock"><pre class="programlisting brush: cypher">MATCH (user)-[:FRIEND]-(friend)
+WITH user, count(friend) AS friends
+ORDER BY friends DESC
+  SKIP 1
+  LIMIT 3
+RETURN user</pre></div>
+<div class="paragraph">
+<p><code>ORDER BY</code>, <code>SKIP</code>, and <code>LIMIT</code> can also be used with <code>WITH</code>.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div></div>
+<div class='col cardfunctions c2-2 c3-1 c4-2 c5-5 c6-6 c9-9'><div class='blk'>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Patterns <a class="fa fa-external-link" title="Learn more" href="https://neo4j.com/docs/cypher-manual/3.5/syntax/patterns"></a></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock"><pre class="programlisting brush: cypher">(n:Person)</pre></div>
+<div class="paragraph">
+<p>Node with <code>Person</code> label.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock"><pre class="programlisting brush: cypher">(n:Person {name: $value})</pre></div>
+<div class="paragraph">
+<p>Node with the declared properties.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock"><pre class="programlisting brush: cypher">()-[r {name: $value}]-()</pre></div>
+<div class="paragraph">
+<p>Matches relationships with the declared properties.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock"><pre class="programlisting brush: cypher">(n:Person)-[]-&gt;(m)</pre></div>
+<div class="paragraph">
+<p>Node <code>n</code> labeled <code>Person</code> with relationship to <code>m</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock"><pre class="programlisting brush: cypher">(m)&lt;-[:KNOWS]-(n)</pre></div>
+<div class="paragraph">
+<p>Relationship of type <code>KNOWS</code> from <code>n</code> to <code>m</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock"><pre class="programlisting brush: cypher">(n)-[:KNOWS|:LOVES]-&gt;(m)</pre></div>
+<div class="paragraph">
+<p>Relationship of type <code>KNOWS</code> or of type <code>LOVES</code> from <code>n</code> to <code>m</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock"><pre class="programlisting brush: cypher">(n)-[*1..5]-&gt;(m)</pre></div>
+<div class="paragraph">
+<p>Variable length path of between 1 and 5 relationships from <code>n</code> to <code>m</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock"><pre class="programlisting brush: cypher">(n)-[*]-&gt;(m)</pre></div>
+<div class="paragraph">
+<p>Variable length path of any number of relationships from <code>n</code> to <code>m</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock"><pre class="programlisting brush: cypher">(n)-[:KNOWS]-&gt;(m {property: $value})</pre></div>
+<div class="paragraph">
+<p>A relationship of type <code>KNOWS</code> from a node <code>n</code> to a node <code>m</code> with the declared property.</p>
+</div></div></td>
+</tr>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div></div>
+<div class='col cardfunctions c2-2 c3-1 c4-2 c5-5 c6-6 c9-9'><div class='blk'>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Labels</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock"><pre class="programlisting brush: cypher">MATCH (n:Person)</pre></div>
+<div class="paragraph">
+<p>Matches nodes labeled <code>Person</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock"><pre class="programlisting brush: cypher">MATCH (n:Person)
+WHERE n.name = $value</pre></div>
+<div class="paragraph">
+<p>Matches nodes labeled <code>Person</code> with the given <code>name</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock"><pre class="programlisting brush: cypher">labels(n)</pre></div>
+<div class="paragraph">
+<p>Labels of the node.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div></div>
+<div class='col cardgeneral c2-2 c3-2 c4-3 c5-3 c6-3 c9-6'><div class='blk'>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top" colspan="2">Operators <a class="fa fa-external-link" title="Learn more" href="https://neo4j.com/docs/cypher-manual/3.5/syntax/operators/"></a></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">General</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DISTINCT</code>, <code>.</code>, <code>[]</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Mathematical</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>, </p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Comparison</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>=</code>, <code>!=</code>, <code>&lt;</code>, <code>&gt;</code>, <code>&lt;=</code>, <code>&gt;=</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AND</code>, <code>OR</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>+</code></p></td>
+</tr>
+</tbody>
+</table>
+</div></div>
+<div class='col cardgeneral c3-3 c4-3 c5-3 c6-3 c9-4'><div class='blk'>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">String Functions <a class="fa fa-external-link" title="Learn more" href="https://neo4j.com/docs/cypher-manual/3.5/functions/string"></a></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock"><pre class="programlisting brush: cypher">toString($expression)</pre></div>
+<div class="paragraph">
+<p>String representation of the expression.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock"><pre class="programlisting brush: cypher">left($original, $subLength),
+  right($original, $subLength)</pre></div>
+<div class="paragraph">
+<p>The first part of a string. The last part of the string.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock"><pre class="programlisting brush: cypher">trim($original), lTrim($original),
+  rTrim($original)</pre></div>
+<div class="paragraph">
+<p>Trim all whitespace, or on the left or right side.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock"><pre class="programlisting brush: cypher">toUpper($original), toLower($original)</pre></div>
+<div class="paragraph">
+<p>UPPERCASE and lowercase.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock"><pre class="programlisting brush: cypher">reverse($original)</pre></div>
+<div class="paragraph">
+<p>Reverse a string.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div></div>
+<div class='col cardgeneral c3-3 c4-3 c5-3 c6-3 c9-5'><div class='blk'>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Aggregating Functions <a class="fa fa-external-link" title="Learn more" href="https://neo4j.com/docs/cypher-manual/3.5/functions/aggregating"></a></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock"><pre class="programlisting brush: cypher">count(*)</pre></div>
+<div class="paragraph">
+<p>The number of matching rows.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock"><pre class="programlisting brush: cypher">count(variable)</pre></div>
+<div class="paragraph">
+<p>The number of non-<code>null</code> values.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock"><pre class="programlisting brush: cypher">sum(n.property)</pre></div>
+<div class="paragraph">
+<p>Sum numerical values. Similar functions are <code>avg()</code>, <code>min()</code>, <code>max()</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock"><pre class="programlisting brush: cypher">percentileDisc(n.property, $percentile)</pre></div>
+<div class="paragraph">
+<p>Discrete percentile. Continuous percentile is <code>percentileCont()</code>.
+The <code>percentile</code> argument is from <code>0.0</code> to <code>1.0</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock"><pre class="programlisting brush: cypher">stDev(n.property)</pre></div>
+<div class="paragraph">
+<p>Standard deviation for a sample of a population.
+For an entire population use <code>stDevP()</code>.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div></div>
+<div class='col cardschema c2-2 c3-3 c4-4 c5-1 c6-5 c9-9'><div class='blk'>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<thead>
+<tr>
+</div></div>
+<div class='col cardschema c2-1 c3-3 c4-4 c5-2 c6-6 c9-9'><div class='blk'>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<thead>
+<tr>
+</div></div>
+<div class='col cardperformance c2-2 c3-3 c4-3 c5-1 c6-2 c9-3'><div class='blk'>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<thead>
+<tr>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div></div></div><div id="clearing-div" style="clear: both;"></div></div></div><footer><div id="footer-text"></div><div class="mid">
+        <div>This reference is adapted from the Neo4j Cypher Refcard 3.5, available at <a href="https://neo4j.com/docs/cypher-refcard/current/">https://neo4j.com/docs/cypher-refcard/current/ </a></th></div>
+  <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="Creative Commons License">
+    <img alt="Creative Commons License" style="border-width:0" src="https://licensebuttons.net/l/by-nc-sa/4.0/80x15.png" />
+</div>
