@@ -1,5 +1,8 @@
 # RedisGraph workshop at RedisDay NYC 2019
 
+## Presentation slides
+[Slides](https://drive.google.com/file/d/1YSFerf4dlZhx7syPjLjHguanA61mTsxb/view?usp=sharing)
+
 ## For use during the presentation
 [Sample Queries](sample_queries.md)
 
